@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lineup_builder/constants/text_styles.dart';
 import 'package:lineup_builder/models/player_positions.dart';
 
-class Player extends StatelessWidget {
+class Player extends StatefulWidget {
   final PlayerPosition coordinates;
   final String position;
   final Color color;
@@ -9,29 +10,67 @@ class Player extends StatelessWidget {
   const Player({this.coordinates, this.position, this.color});
 
   @override
+  _PlayerState createState() => _PlayerState();
+}
+
+class _PlayerState extends State<Player> {
+  TextEditingController _controller = TextEditingController(text: 'Player');
+  FocusNode _focusNode = FocusNode();
+
+  @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 0),
-      alignment: Alignment(coordinates.x, coordinates.y),
-      child: Container(
+    return Positioned(
+      top: widget.coordinates.offset.dy,
+      left: widget.coordinates.offset.dx,
+      child: Draggable(
+        child: _player(),
+        feedback: _player(),
+        childWhenDragging: Container(),
+        onDraggableCanceled: (_, Offset offset) {
+          print(offset);
+          setState(() {
+            widget.coordinates.offset = offset;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _player() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _playerSpot(),
+          SizedBox(height: 5.0),
+          // _playerName(),
+        ],
+      );
+
+  Widget _playerSpot() => Container(
         width: 40.0,
         height: 40.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50.0),
-          color: color,
+          color: widget.color,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.white.withOpacity(0.5),
               spreadRadius: 4,
               blurRadius: 7,
-              offset: Offset(1, 1), // changes position of shadow
+              offset: Offset(1, 1),
             ),
           ],
         ),
         child: Center(
-          child: Text(position),
+          child: Text(widget.position),
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _playerName() => EditableText(
+        controller: _controller,
+        cursorColor: Colors.white,
+        textAlign: TextAlign.center,
+        backgroundCursorColor: Colors.white,
+        focusNode: _focusNode,
+        style: playerName(),
+      );
 }

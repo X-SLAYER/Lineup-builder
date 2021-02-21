@@ -12,17 +12,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Player> players = [
     Player(
-      coordinates: PlayerPosition(-1.9226666673186126, -1.1195227928732259),
+      coordinates: PlayerPosition(Offset(10.0, 10.0)),
       position: 'GK',
       color: Colors.green,
     ),
     Player(
-      coordinates: PlayerPosition(0.0, 0.6),
+      coordinates: PlayerPosition(Offset(10.0, 10.0)),
       position: 'DF',
       color: Colors.blueGrey,
     ),
     Player(
-      coordinates: PlayerPosition(0.0, 1.0),
+      coordinates: PlayerPosition(Offset(10.0, 10.0)),
       position: 'MD',
       color: Colors.red,
     ),
@@ -38,7 +38,10 @@ class _HomePageState extends State<HomePage> {
             var y = details.globalPosition.dy;
           },
           child: Stack(
-            children: [Stadium(), ...players],
+            children: [
+              Stadium(),
+              ...players,
+            ],
           ),
         ),
       ),

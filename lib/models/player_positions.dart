@@ -1,11 +1,11 @@
+import 'dart:ui';
+
 class PlayerPosition {
-  double x;
-  double y;
+  Offset offset;
 
-  PlayerPosition(this.x, this.y);
+  PlayerPosition(this.offset);
 
-  initCords(double x, double y) {
-    this.x = x;
-    this.y = y;
+  initCords(Offset offset) {
+    this.offset = offset;
   }
 }
