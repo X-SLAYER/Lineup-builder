@@ -19,58 +19,56 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return AnimatedPositioned(
+      duration: Duration(milliseconds: 0),
       top: widget.coordinates.offset.dy,
       left: widget.coordinates.offset.dx,
       child: Draggable(
-        child: _player(),
-        feedback: _player(),
+        child: _playerSpot(),
+        feedback: _playerSpot(),
         childWhenDragging: Container(),
         onDraggableCanceled: (_, Offset offset) {
           print(offset);
           setState(() {
-            widget.coordinates.offset = offset;
+            widget.coordinates.initCords(offset);
           });
         },
       ),
     );
   }
 
-  Widget _player() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _playerSpot(),
-          SizedBox(height: 5.0),
-          // _playerName(),
-        ],
-      );
-
-  Widget _playerSpot() => Container(
-        width: 40.0,
-        height: 40.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50.0),
-          color: widget.color,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.5),
-              spreadRadius: 4,
-              blurRadius: 7,
-              offset: Offset(1, 1),
+  Widget _playerSpot() => Material(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            Container(
+              width: 45.0,
+              height: 45.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.color,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.5),
+                    spreadRadius: 4,
+                    blurRadius: 7,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(widget.position),
+              ),
             ),
+            SizedBox(height: 8.0),
+            _playerName()
           ],
         ),
-        child: Center(
-          child: Text(widget.position),
-        ),
       );
 
-  Widget _playerName() => EditableText(
-        controller: _controller,
-        cursorColor: Colors.white,
+  Widget _playerName() => Text(
+        "Player",
         textAlign: TextAlign.center,
-        backgroundCursorColor: Colors.white,
-        focusNode: _focusNode,
         style: playerName(),
       );
 }
