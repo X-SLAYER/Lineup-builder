@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lineup_builder/widgets/main.dart';
 
@@ -13,15 +12,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        onTapDown: (details) {
-          print(Offset(details.localPosition.dx, details.localPosition.dx));
-        },
-        child: Stack(
-          children: [
-            Stadium(),
-            ...players,
-          ],
+      body: SafeArea(
+        child: GestureDetector(
+          child: Stack(
+            children: [
+              Stadium(),
+              ...players,
+            ],
+          ),
         ),
       ),
     );

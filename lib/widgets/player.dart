@@ -16,6 +16,7 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
+  TextEditingController controller = TextEditingController(text: 'Player');
   GlobalKey _key = GlobalKey();
   double top, left;
   double xOff, yOff;
@@ -56,27 +57,33 @@ class _PlayerState extends State<Player> {
               top = drag.offset.dy - yOff;
               left = drag.offset.dx - xOff;
             });
+            print(Offset(left, top));
           }),
     );
   }
 
   Widget _playerSpot() => Material(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          CustomPaint(
-            size: Size(50, (50 * 1.0680100755667505).toDouble()),
-            painter: RPSCustomPainter(),
-          ),
-          SizedBox(height: 8.0),
-          _playerName(),
-        ],
-      ));
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            CustomPaint(
+              size: Size(50, (50 * 1.0680100755667505).toDouble()),
+              painter: RPSCustomPainter(),
+            ),
+            SizedBox(height: 8.0),
+            // _playerName(),
+          ],
+        ),
+      );
 
-  Widget _playerName() => Text(
-        "Player",
-        textAlign: TextAlign.center,
-        style: playerName(),
+  Widget _playerName() => EditableText(
+        autofocus: true,
+        maxLines: null,
+        backgroundCursorColor: Colors.red,
+        cursorColor: Colors.green,
+        style: TextStyle(),
+        focusNode: FocusNode(),
+        controller: controller,
       );
 }
 
