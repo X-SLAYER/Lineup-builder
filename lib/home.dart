@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lineup_builder/providers/players_provider.dart';
+import 'package:lineup_builder/utils/json_handler.dart';
 import 'package:lineup_builder/widgets/main.dart';
 import 'dart:convert';
 
@@ -15,11 +18,12 @@ class _HomePageState extends State<HomePage> {
   _readTactics() {
     var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
     playerProvider.clearAll();
-    rootBundle.loadString("assets/tactics/4-3-3.json").then((json) {
+    print('Cleared');
+    rootBundle.loadString("assets/tactics/4-4-2.json").then((json) {
       var jsonBody = jsonDecode(json);
       List<dynamic> _players = jsonBody['players'];
       _players.forEach((player) {
-        playerProvider.addPlayer(player.toString());
+        playerProvider.addPlayer(player);
       });
     });
   }
@@ -39,6 +43,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               Stadium(),
               ...playerProvider.players,
+              FloatingActionButton(
+                  backgroundColor: Colors.yellow,
+                  onPressed: () {
+                    log(playerToJson(playerProvider.players));
+                  }),
             ],
           ),
         )),

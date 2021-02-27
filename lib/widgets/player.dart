@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lineup_builder/constants/text_styles.dart';
-import 'package:lineup_builder/models/player_positions.dart';
 
 import 'mailot.dart';
 
+// ignore: must_be_immutable
 class Player extends StatefulWidget {
-  final PlayerPosition coordinates;
-  final String position;
+  final Offset coordinates;
+  Offset tempOffset;
 
-  const Player({this.coordinates, this.position});
+  Player({@required this.coordinates});
 
   @override
   _PlayerState createState() => _PlayerState();
@@ -23,8 +23,9 @@ class _PlayerState extends State<Player> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
-    top = widget.coordinates.offset.dy;
-    left = widget.coordinates.offset.dx;
+    top = widget.coordinates.dy;
+    left = widget.coordinates.dx;
+    widget.tempOffset = widget.coordinates;
     super.initState();
   }
 
@@ -48,15 +49,19 @@ class _PlayerState extends State<Player> {
       top: top,
       left: left,
       child: Draggable(
-          child: _playerSpot(),
-          feedback: _playerSpot(),
-          childWhenDragging: Container(),
-          onDragEnd: (drag) {
-            setState(() {
-              top = drag.offset.dy - yOff;
-              left = drag.offset.dx - xOff;
-            });
-          }),
+        child: _playerSpot(),
+        feedback: _playerSpot(),
+        childWhenDragging: Container(),
+        onDraggableCanceled: (_, drag) {
+          setState(
+            () {
+              top = drag.dy - yOff;
+              left = drag.dx - xOff;
+              widget.tempOffset = drag;
+            },
+          );
+        },
+      ),
     );
   }
 
