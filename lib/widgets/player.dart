@@ -7,9 +7,8 @@ import 'mailot.dart';
 class Player extends StatefulWidget {
   final PlayerPosition coordinates;
   final String position;
-  final Color color;
 
-  const Player({this.coordinates, this.position, this.color});
+  const Player({this.coordinates, this.position});
 
   @override
   _PlayerState createState() => _PlayerState();
@@ -71,19 +70,15 @@ class _PlayerState extends State<Player> {
               painter: RPSCustomPainter(),
             ),
             SizedBox(height: 8.0),
-            // _playerName(),
+            _playerName(),
           ],
         ),
       );
 
-  Widget _playerName() => EditableText(
-        autofocus: true,
-        maxLines: null,
-        backgroundCursorColor: Colors.red,
-        cursorColor: Colors.green,
-        style: TextStyle(),
-        focusNode: FocusNode(),
-        controller: controller,
+  Widget _playerName() => Text(
+        "Player",
+        textAlign: TextAlign.center,
+        style: playerName(),
       );
 }
 
