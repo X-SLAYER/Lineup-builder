@@ -56,7 +56,6 @@ class _PlayerState extends State<Player> {
               top = drag.offset.dy - yOff;
               left = drag.offset.dx - xOff;
             });
-            print(Offset(left, top));
           }),
     );
   }
@@ -81,29 +80,3 @@ class _PlayerState extends State<Player> {
         style: playerName(),
       );
 }
-
-// Column(
-//           children: [
-//             Container(
-//               width: 45.0,
-//               height: 45.0,
-//               decoration: BoxDecoration(
-//                 shape: BoxShape.circle,
-//                 color: widget.color,
-//                 boxShadow: [
-//                   BoxShadow(
-//                     color: Colors.white.withOpacity(0.5),
-//                     spreadRadius: 4,
-//                     blurRadius: 7,
-//                     offset: Offset(1, 1),
-//                   ),
-//                 ],
-//               ),
-//               child: Center(
-//                 child: Text(widget.position),
-//               ),
-//             ),
-//             SizedBox(height: 8.0),
-//             _playerName()
-//           ],
-//         ),

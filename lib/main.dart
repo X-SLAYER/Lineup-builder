@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lineup_builder/home.dart';
+import 'package:lineup_builder/providers/players_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider.value(value: PlayersProvider())],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

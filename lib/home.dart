@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lineup_builder/models/player_positions.dart';
+import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:lineup_builder/widgets/main.dart';
 import 'dart:convert';
+
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,32 +12,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Player> players = [];
-
   _readTactics() {
+    var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
+    playerProvider.clearAll();
     rootBundle.loadString("assets/tactics/4-3-3.json").then((json) {
       var jsonBody = jsonDecode(json);
       List<dynamic> _players = jsonBody['players'];
-      setState(() {
-        players.clear();
-      });
       _players.forEach((player) {
-        setState(() {
-          players.add(fromRegex(player.toString()));
-        });
+        playerProvider.addPlayer(player.toString());
       });
     });
-  }
-
-  Player fromRegex(String source) {
-    List<String> matchs = new RegExp(r'{(\w+): {x:*(.*?), y:*(.*?)}}')
-        .firstMatch(source.toString())
-        .groups([1, 2, 3]);
-    return Player(
-      coordinates: PlayerPosition(
-          Offset(double.parse(matchs[1]), double.parse(matchs[2]))),
-      position: matchs[0],
-    );
   }
 
   @override
@@ -48,13 +34,14 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: GestureDetector(
-          child: Stack(
+            child: Consumer<PlayersProvider>(
+          builder: (_, playerProvider, __) => Stack(
             children: [
               Stadium(),
-              ...players,
+              ...playerProvider.players,
             ],
           ),
-        ),
+        )),
       ),
     );
   }
