@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lineup_builder/widgets/main.dart';
 
 Player playerFromJson(dynamic source) {
@@ -20,7 +21,7 @@ playerToJson(List<Player> players) {
 
 Map<String, dynamic> _toJson(Player player) {
   final Map<String, dynamic> data = new Map<String, dynamic>();
-  data['x'] = player.coordinates.dx ?? 'WTFF';
-  data['y'] = player.coordinates.dy;
+  data['x'] = player.coordinates.dx ?? 0.0;
+  data['y'] = player.coordinates.dy ?? 0.0;
   return data;
 }

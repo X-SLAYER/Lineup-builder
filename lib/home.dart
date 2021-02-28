@@ -15,15 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _readTactics() {
+  Future<void> _readTactics(String squad) async {
     var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
-    playerProvider.clearAll();
-    rootBundle.loadString("assets/tactics/4-4-2.json").then((json) {
-      var jsonBody = jsonDecode(json);
-      List<dynamic> _players = jsonBody['players'];
-      _players.forEach((player) {
-        playerProvider.addPlayer(player);
-      });
+    // playerProvider.clearAll();
+    var json = await rootBundle.loadString("assets/tactics/$squad.json");
+    var jsonBody = await jsonDecode(json);
+    List<dynamic> _players = jsonBody['players'];
+    _players.forEach((player) {
+      playerProvider.addPlayer(player);
     });
   }
 
@@ -31,8 +30,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _readTactics();
+        onPressed: () async {
+          Provider.of<PlayersProvider>(context, listen: false).clearAll();
+          await _readTactics("4-4-2");
         },
       ),
       body: SafeArea(
@@ -69,7 +69,11 @@ class _HomePageState extends State<HomePage> {
                   Icon(Icons.contact_mail_outlined),
                   SizedBox(width: 10.0),
                   FlatButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        Provider.of<PlayersProvider>(context, listen: false)
+                            .clearAll();
+                        await _readTactics("4-2-3-1");
+                      },
                       child: Text("Save"),
                       color: Colors.yellow)
                 ],
