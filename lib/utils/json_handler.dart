@@ -20,7 +20,7 @@ playerToJson(List<Player> players) {
 
 Map<String, dynamic> _toJson(Player player) {
   final Map<String, dynamic> data = new Map<String, dynamic>();
-  data['x'] = player.tempOffset.dx;
-  data['y'] = player.tempOffset.dy;
+  data['x'] = player.coordinates.dx ?? 'WTFF';
+  data['y'] = player.coordinates.dy;
   return data;
 }

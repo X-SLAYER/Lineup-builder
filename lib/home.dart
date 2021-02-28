@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   _readTactics() {
     var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
     playerProvider.clearAll();
-    print('Cleared');
     rootBundle.loadString("assets/tactics/4-4-2.json").then((json) {
       var jsonBody = jsonDecode(json);
       List<dynamic> _players = jsonBody['players'];
@@ -37,20 +36,47 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       body: SafeArea(
-        child: GestureDetector(
-            child: Consumer<PlayersProvider>(
-          builder: (_, playerProvider, __) => Stack(
+        child: Consumer<PlayersProvider>(
+          builder: (_, playerProvider, __) => Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
+              children: [
+                Stadium(),
+                ...playerProvider.players,
+                FloatingActionButton(
+                    backgroundColor: Colors.yellow,
+                    onPressed: () {
+                      log(playerToJson(playerProvider.players));
+                    }),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: MediaQuery.of(context).size.height * 0.1,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Stadium(),
-              ...playerProvider.players,
-              FloatingActionButton(
-                  backgroundColor: Colors.yellow,
-                  onPressed: () {
-                    log(playerToJson(playerProvider.players));
-                  }),
+              Text('4-2-2'),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.contact_mail_outlined),
+                  SizedBox(width: 10.0),
+                  FlatButton(
+                      onPressed: () {},
+                      child: Text("Save"),
+                      color: Colors.yellow)
+                ],
+              )
             ],
           ),
-        )),
+        ),
       ),
     );
   }

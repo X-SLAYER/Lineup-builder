@@ -5,8 +5,7 @@ import 'mailot.dart';
 
 // ignore: must_be_immutable
 class Player extends StatefulWidget {
-  final Offset coordinates;
-  Offset tempOffset;
+  Offset coordinates;
 
   Player({@required this.coordinates});
 
@@ -25,7 +24,6 @@ class _PlayerState extends State<Player> {
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     top = widget.coordinates.dy;
     left = widget.coordinates.dx;
-    widget.tempOffset = widget.coordinates;
     super.initState();
   }
 
@@ -57,7 +55,7 @@ class _PlayerState extends State<Player> {
             () {
               top = drag.dy - yOff;
               left = drag.dx - xOff;
-              widget.tempOffset = drag;
+              widget.coordinates = Offset(left, top);
             },
           );
         },
@@ -70,7 +68,7 @@ class _PlayerState extends State<Player> {
         child: Column(
           children: [
             CustomPaint(
-              size: Size(50, (50 * 1.0680100755667505).toDouble()),
+              size: Size(45, (45 * 1.0680100755667505).toDouble()),
               painter: RPSCustomPainter(),
             ),
             SizedBox(height: 8.0),
