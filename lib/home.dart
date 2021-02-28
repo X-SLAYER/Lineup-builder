@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:lineup_builder/utils/json_handler.dart';
@@ -15,6 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  GlobalKey screenShotKey = GlobalKey();
+  Uint8List img;
+
   Future<void> _readTactics(String squad) async {
     var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
     // playerProvider.clearAll();
@@ -23,6 +29,16 @@ class _HomePageState extends State<HomePage> {
     List<dynamic> _players = jsonBody['players'];
     _players.forEach((player) {
       playerProvider.addPlayer(player);
+    });
+  }
+
+  takescrshot() async {
+    RenderRepaintBoundary boundary =
+        screenShotKey.currentContext.findRenderObject();
+    var image = await boundary.toImage();
+    var byteData = await image.toByteData(format: ImageByteFormat.png);
+    setState(() {
+      img = byteData.buffer.asUint8List();
     });
   }
 
@@ -40,16 +56,19 @@ class _HomePageState extends State<HomePage> {
           builder: (_, playerProvider, __) => Container(
             height: double.infinity,
             width: double.infinity,
-            child: Stack(
-              children: [
-                Stadium(),
-                ...playerProvider.players,
-                FloatingActionButton(
-                    backgroundColor: Colors.yellow,
-                    onPressed: () {
-                      log(playerToJson(playerProvider.players));
-                    }),
-              ],
+            child: RepaintBoundary(
+              key: screenShotKey,
+              child: Stack(
+                children: [
+                  Stadium(),
+                  ...playerProvider.players,
+                  FloatingActionButton(
+                      backgroundColor: Colors.yellow,
+                      onPressed: () {
+                        log(playerToJson(playerProvider.players));
+                      }),
+                ],
+              ),
             ),
           ),
         ),
@@ -70,9 +89,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(width: 10.0),
                   FlatButton(
                       onPressed: () async {
-                        Provider.of<PlayersProvider>(context, listen: false)
-                            .clearAll();
-                        await _readTactics("4-2-3-1");
+                        await takescrshot();
                       },
                       child: Text("Save"),
                       color: Colors.yellow)
