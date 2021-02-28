@@ -1,12 +1,11 @@
 import 'dart:developer';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:lineup_builder/utils/json_handler.dart';
+import 'package:lineup_builder/widgets/bottom_panel.dart';
 import 'package:lineup_builder/widgets/main.dart';
 import 'dart:convert';
 
@@ -19,27 +18,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   GlobalKey screenShotKey = GlobalKey();
-  Uint8List img;
 
   Future<void> _readTactics(String squad) async {
-    var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
-    // playerProvider.clearAll();
-    var json = await rootBundle.loadString("assets/tactics/$squad.json");
-    var jsonBody = await jsonDecode(json);
-    List<dynamic> _players = jsonBody['players'];
-    _players.forEach((player) {
-      playerProvider.addPlayer(player);
-    });
+    try {
+      var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
+      playerProvider.clearAll();
+      String json = await rootBundle.loadString("assets/tactics/$squad.json");
+      var jsonBody = jsonDecode(json);
+      List<dynamic> _players = jsonBody['players'];
+      print(jsonBody);
+      _players.forEach((player) {
+        playerProvider.addPlayer(player);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   takescrshot() async {
     RenderRepaintBoundary boundary =
         screenShotKey.currentContext.findRenderObject();
     var image = await boundary.toImage();
-    var byteData = await image.toByteData(format: ImageByteFormat.png);
-    setState(() {
-      img = byteData.buffer.asUint8List();
-    });
   }
 
   @override
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Consumer<PlayersProvider>(
-          builder: (_, playerProvider, __) => Container(
+          builder: (_, playerProvider, child) => Container(
             height: double.infinity,
             width: double.infinity,
             child: RepaintBoundary(
@@ -73,31 +72,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: MediaQuery.of(context).size.height * 0.1,
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('4-2-2'),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.contact_mail_outlined),
-                  SizedBox(width: 10.0),
-                  FlatButton(
-                      onPressed: () async {
-                        await takescrshot();
-                      },
-                      child: Text("Save"),
-                      color: Colors.yellow)
-                ],
-              )
-            ],
-          ),
-        ),
+      bottomNavigationBar: BottomPanel(
+        onSelect: (tactic) {
+          _readTactics(tactic);
+        },
+        onPressed: () async {
+          await _readTactics('4-2-3-1');
+        },
       ),
     );
   }

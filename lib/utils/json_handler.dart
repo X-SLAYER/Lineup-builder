@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lineup_builder/widgets/main.dart';
 
 Player playerFromJson(dynamic source) {
@@ -13,6 +12,9 @@ Player playerFromJson(dynamic source) {
   );
 }
 
+///export your custom tactic to a json file
+///it might help later if u need to save this on
+///server side or in a local file
 playerToJson(List<Player> players) {
   final Map<String, dynamic> _players = new Map<String, dynamic>();
   _players['players'] = players.map((player) => _toJson(player)).toList();

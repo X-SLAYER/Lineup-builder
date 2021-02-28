@@ -41,9 +41,8 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
+    return Positioned(
       key: _key,
-      duration: Duration(milliseconds: 0),
       top: top,
       left: left,
       child: Draggable(

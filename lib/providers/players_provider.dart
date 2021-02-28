@@ -16,4 +16,9 @@ class PlayersProvider extends ChangeNotifier {
     _players.add(playerFromJson(source));
     notifyListeners();
   }
+
+  addAll(List<Player> players) {
+    _players.addAll(players);
+    notifyListeners();
+  }
 }
