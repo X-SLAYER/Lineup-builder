@@ -56,10 +56,10 @@ class _BottomPanelState extends State<BottomPanel> {
               children: [
                 Icon(Icons.contact_mail_outlined),
                 SizedBox(width: 10.0),
-                FlatButton(
-                    onPressed: widget.onPressed,
-                    child: Text("Save"),
-                    color: Colors.yellow)
+                TextButton(
+                  onPressed: widget.onPressed,
+                  child: Text("Save"),
+                )
               ],
             )
           ],

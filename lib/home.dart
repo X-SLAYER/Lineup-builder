@@ -19,15 +19,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   GlobalKey screenShotKey = GlobalKey();
 
-  Future<void> _readTactics(String squad) async {
+  _readTactics(String squad) async {
+    // Formation.load();
     try {
       var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
       playerProvider.clearAll();
-      String json = await rootBundle.loadString("assets/tactics/$squad.json");
-      var jsonBody = jsonDecode(json);
-      List<dynamic> _players = jsonBody['players'];
-      print(jsonBody);
-      _players.forEach((player) {
+      dynamic formation = await loadOnce(squad);
+      formation.forEach((player) {
         playerProvider.addPlayer(player);
       });
     } catch (e) {
@@ -35,10 +33,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<dynamic> loadOnce(String squad) async {
+    try {
+      String json = await rootBundle.loadString("assets/tactics/$squad.json");
+      var jsonBody = jsonDecode(json);
+      List<dynamic> _players = jsonBody['players'];
+      print(_players);
+      return _players;
+    } catch (e) {
+      print("error: $e");
+    }
+  }
+
   takescrshot() async {
     RenderRepaintBoundary boundary =
         screenShotKey.currentContext.findRenderObject();
-    var image = await boundary.toImage();
+    // var image = await boundary.toImage();
   }
 
   @override
@@ -47,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Provider.of<PlayersProvider>(context, listen: false).clearAll();
-          await _readTactics("4-4-2");
+          await _readTactics("4-3-3");
         },
       ),
       body: SafeArea(
@@ -77,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           _readTactics(tactic);
         },
         onPressed: () async {
-          await _readTactics('4-2-3-1');
+          await _readTactics('4-3-3');
         },
       ),
     );
