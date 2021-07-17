@@ -27,6 +27,12 @@ class _PlayerState extends State<Player> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   void _getRenderOffsets() {
     final RenderBox renderBoxWidget = _key.currentContext.findRenderObject();
     final offset = renderBoxWidget.localToGlobal(Offset.zero);
@@ -55,7 +61,6 @@ class _PlayerState extends State<Player> {
               top = drag.dy - yOff;
               left = drag.dx - xOff;
               widget.coordinates = Offset(left, top);
-              print(drag);
             },
           );
         },
@@ -64,7 +69,7 @@ class _PlayerState extends State<Player> {
   }
 
   Widget _playerSpot() => Material(
-        color: Colors.transparent,
+        type: MaterialType.transparency,
         child: Column(
           children: [
             CustomPaint(
@@ -72,14 +77,21 @@ class _PlayerState extends State<Player> {
               painter: PlayerMailot(),
             ),
             SizedBox(height: 8.0),
-            _playerName(),
+            SizedBox(
+              child: _playerName(),
+              width: MediaQuery.of(context).size.width * 0.2,
+            ),
           ],
         ),
       );
 
-  Widget _playerName() => Text(
-        "Player",
+  Widget _playerName() => EditableText(
+        maxLines: 1,
         textAlign: TextAlign.center,
+        backgroundCursorColor: Colors.amber,
+        cursorColor: Colors.green,
         style: playerName(),
+        focusNode: FocusNode(),
+        controller: controller,
       );
 }

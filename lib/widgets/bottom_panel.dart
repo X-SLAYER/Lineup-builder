@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BottomPanel extends StatefulWidget {
-  final Function() onPressed;
+  final Function() onSave;
   final ValueChanged<String> onSelect;
 
-  BottomPanel({this.onPressed, this.onSelect});
+  BottomPanel({this.onSelect, this.onSave});
 
   @override
   _BottomPanelState createState() => _BottomPanelState();
@@ -64,7 +64,7 @@ class _BottomPanelState extends State<BottomPanel> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.yellow),
                   ),
-                  onPressed: widget.onPressed,
+                  onPressed: widget.onSave,
                   child: Text("Save"),
                 )
               ],

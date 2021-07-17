@@ -1,17 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:lineup_builder/utils/json_handler.dart';
 import 'package:lineup_builder/widgets/bottom_panel.dart';
 import 'package:lineup_builder/widgets/main.dart';
-import 'dart:convert';
 
 import 'package:provider/provider.dart';
-
-import 'constants/formation.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,15 +21,14 @@ class _HomePageState extends State<HomePage> {
 
   _readTactics(String squad) async {
     try {
-      dynamic formation = await loadFromAssets(squad);
+      dynamic formation = await loadFormationFromAssets(squad);
       var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
       List<Player> _players = [];
-      print(formation);
       formation.forEach((player) {
         _players.add(playerFromJson(player));
       });
       playerProvider.clearAll();
-      Future.delayed(Duration(milliseconds: 5), () {
+      Future.delayed(Duration(milliseconds: 10), () {
         playerProvider.addAll(_players);
       });
     } catch (e) {
@@ -42,19 +39,17 @@ class _HomePageState extends State<HomePage> {
   takescrshot() async {
     RenderRepaintBoundary boundary =
         screenShotKey.currentContext.findRenderObject();
-    // var image = await boundary.toImage();
+    var image = await boundary.toImage();
+    var byteData = await image.toByteData(format: ImageByteFormat.png);
+    var pngBytes = byteData.buffer.asUint8List();
+    print(pngBytes);
+    File('lineup.png').writeAsBytes(pngBytes);
   }
 
-  Future<dynamic> loadFromAssets(String squad) async {
-    try {
-      String json = await rootBundle.loadString("assets/tactics/$squad.json");
-      var jsonBody = jsonDecode(json);
-      List<dynamic> _players = jsonBody['players'];
-      print(_players);
-      return _players;
-    } catch (e) {
-      print("error: $e");
-    }
+  @override
+  void initState() {
+    super.initState();
+    _readTactics("4-4-2");
   }
 
   @override
@@ -91,8 +86,8 @@ class _HomePageState extends State<HomePage> {
         onSelect: (tactic) {
           _readTactics(tactic);
         },
-        onPressed: () async {
-          await _readTactics('4-3-3');
+        onSave: () async {
+          await takescrshot();
         },
       ),
     );

@@ -19,7 +19,6 @@ class PlayersProvider extends ChangeNotifier {
 
   addAll(List<Player> players) {
     _players.addAll(players);
-    print(_players);
     notifyListeners();
   }
 }

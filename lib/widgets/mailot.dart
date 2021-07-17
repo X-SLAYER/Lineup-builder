@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lineup_builder/constants/text_styles.dart';
 
 class PlayerMailot extends CustomPainter {
   @override
@@ -184,7 +185,7 @@ class PlayerMailot extends CustomPainter {
     path_0.close();
 
     Paint paintFill = Paint()..style = PaintingStyle.fill;
-    paintFill.color = Color(0xffb81313).withOpacity(1.0);
+    paintFill.color = PRIMARY_COLOR;
     canvas.drawPath(path_0, paintFill);
 
     Path path_1 = Path();
@@ -307,7 +308,7 @@ class PlayerMailot extends CustomPainter {
         size.height * 0.02830189);
 
     Paint paintFill2 = Paint()..style = PaintingStyle.fill;
-    paintFill2.color = Color(0xffb81313).withOpacity(1.0);
+    paintFill2.color = PRIMARY_COLOR;
     canvas.drawPath(path_2, paintFill2);
 
     Path path_3 = Path();
