@@ -14,3 +14,9 @@ Create your own team and select your uniform from various colors
 <li> change players name </li>
 <li> load formation from json files </li>
 <li> save a screenshot of the lineup </li>
+
+
+
+
+https://user-images.githubusercontent.com/22800380/126048810-bb0b9ddf-321f-4e21-b3c4-1d22e2d2de68.mp4
+
