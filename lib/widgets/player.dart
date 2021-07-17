@@ -55,6 +55,7 @@ class _PlayerState extends State<Player> {
               top = drag.dy - yOff;
               left = drag.dx - xOff;
               widget.coordinates = Offset(left, top);
+              print(drag);
             },
           );
         },
@@ -68,7 +69,7 @@ class _PlayerState extends State<Player> {
           children: [
             CustomPaint(
               size: Size(45, (45 * 1.0680100755667505).toDouble()),
-              painter: RPSCustomPainter(),
+              painter: PlayerMailot(),
             ),
             SizedBox(height: 8.0),
             _playerName(),

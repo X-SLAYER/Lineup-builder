@@ -33,8 +33,10 @@ class _BottomPanelState extends State<BottomPanel> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Text('Formation: '),
+            SizedBox(width: 3.0),
             DropdownButton<String>(
                 value: selectedTactic,
                 items: tactics.map(
@@ -51,12 +53,17 @@ class _BottomPanelState extends State<BottomPanel> {
                   });
                   widget.onSelect(tactic);
                 }),
+            Spacer(),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.contact_mail_outlined),
                 SizedBox(width: 10.0),
                 TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.yellow),
+                  ),
                   onPressed: widget.onPressed,
                   child: Text("Save"),
                 )

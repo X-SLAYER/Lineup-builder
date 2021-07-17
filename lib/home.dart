@@ -11,6 +11,8 @@ import 'dart:convert';
 
 import 'package:provider/provider.dart';
 
+import 'constants/formation.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,20 +22,30 @@ class _HomePageState extends State<HomePage> {
   GlobalKey screenShotKey = GlobalKey();
 
   _readTactics(String squad) async {
-    // Formation.load();
     try {
+      dynamic formation = await loadFromAssets(squad);
       var playerProvider = Provider.of<PlayersProvider>(context, listen: false);
-      playerProvider.clearAll();
-      dynamic formation = await loadOnce(squad);
+      List<Player> _players = [];
+      print(formation);
       formation.forEach((player) {
-        playerProvider.addPlayer(player);
+        _players.add(playerFromJson(player));
+      });
+      playerProvider.clearAll();
+      Future.delayed(Duration(milliseconds: 5), () {
+        playerProvider.addAll(_players);
       });
     } catch (e) {
       print(e);
     }
   }
 
-  Future<dynamic> loadOnce(String squad) async {
+  takescrshot() async {
+    RenderRepaintBoundary boundary =
+        screenShotKey.currentContext.findRenderObject();
+    // var image = await boundary.toImage();
+  }
+
+  Future<dynamic> loadFromAssets(String squad) async {
     try {
       String json = await rootBundle.loadString("assets/tactics/$squad.json");
       var jsonBody = jsonDecode(json);
@@ -45,24 +57,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  takescrshot() async {
-    RenderRepaintBoundary boundary =
-        screenShotKey.currentContext.findRenderObject();
-    // var image = await boundary.toImage();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Provider.of<PlayersProvider>(context, listen: false).clearAll();
-          await _readTactics("4-3-3");
+          await _readTactics("4-4-2");
         },
       ),
       body: SafeArea(
         child: Consumer<PlayersProvider>(
-          builder: (_, playerProvider, child) => Container(
+          builder: (_, provider, child) => Container(
             height: double.infinity,
             width: double.infinity,
             child: RepaintBoundary(
@@ -70,11 +75,11 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 children: [
                   Stadium(),
-                  ...playerProvider.players,
+                  ...provider.players,
                   FloatingActionButton(
                       backgroundColor: Colors.yellow,
                       onPressed: () {
-                        log(playerToJson(playerProvider.players));
+                        log(playerToJson(provider.players));
                       }),
                 ],
               ),

@@ -5,7 +5,6 @@ import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  await Formation.load();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider.value(value: PlayersProvider())],

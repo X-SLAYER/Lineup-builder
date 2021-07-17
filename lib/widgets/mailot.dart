@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RPSCustomPainter extends CustomPainter {
+class PlayerMailot extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
