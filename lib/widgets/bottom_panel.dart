@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class BottomPanel extends StatefulWidget {
   final Function() onSave;
+  final ValueChanged<Color> onColorChange;
   final ValueChanged<String> onSelect;
 
-  BottomPanel({this.onSelect, this.onSave});
+  BottomPanel({this.onSelect, this.onSave, this.onColorChange});
 
   @override
   _BottomPanelState createState() => _BottomPanelState();
@@ -18,11 +20,42 @@ class _BottomPanelState extends State<BottomPanel> {
   ];
 
   String selectedTactic;
+  Color currentColor = Colors.black;
 
   @override
   void initState() {
     super.initState();
     selectedTactic = tactics[0];
+  }
+
+  _showDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Pick a color!'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: currentColor,
+            onColorChanged: (color) {
+              widget.onColorChange(color);
+              currentColor = color;
+              setState(() {});
+            },
+            showLabel: true,
+            pickerAreaHeightPercent: 0.8,
+            paletteType: PaletteType.hsv,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Done'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -57,7 +90,12 @@ class _BottomPanelState extends State<BottomPanel> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.contact_mail_outlined),
+                IconButton(
+                    onPressed: () {
+                      _showDialog();
+                    },
+                    icon:
+                        Icon(Icons.color_lens, color: Colors.red, size: 30.0)),
                 SizedBox(width: 10.0),
                 TextButton(
                   style: ButtonStyle(

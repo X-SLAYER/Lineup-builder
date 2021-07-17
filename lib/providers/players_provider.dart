@@ -4,8 +4,10 @@ import 'package:lineup_builder/widgets/player.dart';
 
 class PlayersProvider extends ChangeNotifier {
   List<Player> _players = [];
+  Color _color = Color(0xff000000);
 
   List<Player> get players => _players;
+  Color get color => _color;
 
   clearAll() {
     _players.clear();
@@ -19,6 +21,11 @@ class PlayersProvider extends ChangeNotifier {
 
   addAll(List<Player> players) {
     _players.addAll(players);
+    notifyListeners();
+  }
+
+  setColor(Color color) {
+    _color = color;
     notifyListeners();
   }
 }

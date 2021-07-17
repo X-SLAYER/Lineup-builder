@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
@@ -8,8 +7,10 @@ import 'package:lineup_builder/providers/players_provider.dart';
 import 'package:lineup_builder/utils/json_handler.dart';
 import 'package:lineup_builder/widgets/bottom_panel.dart';
 import 'package:lineup_builder/widgets/main.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,8 +43,12 @@ class _HomePageState extends State<HomePage> {
     var image = await boundary.toImage();
     var byteData = await image.toByteData(format: ImageByteFormat.png);
     var pngBytes = byteData.buffer.asUint8List();
-    print(pngBytes);
-    File('lineup.png').writeAsBytes(pngBytes);
+    final appDir = await syspaths.getExternalStorageDirectory();
+    File('${appDir.path}/lineup.png').writeAsBytes(pngBytes).then((value) {
+      print(value);
+      Toast.show("Lineup has been saved sucessfully", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    });
   }
 
   @override
@@ -55,11 +60,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await _readTactics("4-4-2");
-        },
-      ),
       body: SafeArea(
         child: Consumer<PlayersProvider>(
           builder: (_, provider, child) => Container(
@@ -71,11 +71,6 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Stadium(),
                   ...provider.players,
-                  FloatingActionButton(
-                      backgroundColor: Colors.yellow,
-                      onPressed: () {
-                        log(playerToJson(provider.players));
-                      }),
                 ],
               ),
             ),
@@ -88,6 +83,9 @@ class _HomePageState extends State<HomePage> {
         },
         onSave: () async {
           await takescrshot();
+        },
+        onColorChange: (color) {
+          Provider.of<PlayersProvider>(context, listen: false).setColor(color);
         },
       ),
     );

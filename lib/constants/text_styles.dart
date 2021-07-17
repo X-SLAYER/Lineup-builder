@@ -5,5 +5,3 @@ TextStyle playerName() => TextStyle(
       color: Colors.white,
       decorationThickness: 0.001,
     );
-
-const PRIMARY_COLOR = Color(0xff000000);

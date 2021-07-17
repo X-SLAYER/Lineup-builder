@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lineup_builder/constants/text_styles.dart';
+import 'package:lineup_builder/providers/players_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'mailot.dart';
 
@@ -72,9 +74,11 @@ class _PlayerState extends State<Player> {
         type: MaterialType.transparency,
         child: Column(
           children: [
-            CustomPaint(
-              size: Size(45, (45 * 1.0680100755667505).toDouble()),
-              painter: PlayerMailot(),
+            Consumer<PlayersProvider>(
+              builder: (__, provider, _) => CustomPaint(
+                size: Size(45, (45 * 1.0680100755667505).toDouble()),
+                painter: PlayerMailot(color: provider.color),
+              ),
             ),
             SizedBox(height: 8.0),
             SizedBox(
